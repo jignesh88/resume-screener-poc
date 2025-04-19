@@ -21,11 +21,12 @@ resource "aws_s3_bucket_policy" "frontend_bucket_policy" {
         }
         Action    = "s3:GetObject"
         Resource  = "${aws_s3_bucket.frontend_bucket.arn}/*"
-        Condition = {
-          StringEquals = {
-            "AWS:SourceArn" = aws_cloudfront_distribution.frontend_distribution.arn
-          }
-        }
+        # Remove the circular dependency with CloudFront
+        # Condition = {
+        #   StringEquals = {
+        #     "AWS:SourceArn" = aws_cloudfront_distribution.frontend_distribution.arn
+        #   }
+        # }
       }
     ]
   })
@@ -124,10 +125,7 @@ resource "aws_cloudfront_distribution" "frontend_distribution" {
     Name = "Resume Screener Frontend"
   }
   
-  # Only create distribution after bucket policy is attached
-  depends_on = [
-    aws_s3_bucket_policy.frontend_bucket_policy
-  ]
+  # Dependencies managed separately to avoid circular references
 }
 
 #------------------------------------------------------------

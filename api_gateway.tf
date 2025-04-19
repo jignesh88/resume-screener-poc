@@ -39,7 +39,7 @@ resource "aws_api_gateway_method" "get_jobs" {
   rest_api_id   = aws_api_gateway_rest_api.resume_screener_api.id
   resource_id   = aws_api_gateway_resource.jobs_resource.id
   http_method   = "GET"
-  authorization_type = "NONE"
+  authorization = "NONE"
 }
 
 # CORS for /jobs
@@ -47,7 +47,7 @@ resource "aws_api_gateway_method" "jobs_options" {
   rest_api_id   = aws_api_gateway_rest_api.resume_screener_api.id
   resource_id   = aws_api_gateway_resource.jobs_resource.id
   http_method   = "OPTIONS"
-  authorization_type = "NONE"
+  authorization = "NONE"
 }
 
 resource "aws_api_gateway_integration" "jobs_options_integration" {
@@ -123,7 +123,7 @@ resource "aws_api_gateway_method" "get_job" {
   rest_api_id   = aws_api_gateway_rest_api.resume_screener_api.id
   resource_id   = aws_api_gateway_resource.job_resource.id
   http_method   = "GET"
-  authorization_type = "NONE"
+  authorization = "NONE"
   
   request_parameters = {
     "method.request.path.jobId" = true
@@ -135,7 +135,7 @@ resource "aws_api_gateway_method" "job_options" {
   rest_api_id   = aws_api_gateway_rest_api.resume_screener_api.id
   resource_id   = aws_api_gateway_resource.job_resource.id
   http_method   = "OPTIONS"
-  authorization_type = "NONE"
+  authorization = "NONE"
 }
 
 resource "aws_api_gateway_integration" "job_options_integration" {
@@ -211,7 +211,7 @@ resource "aws_api_gateway_method" "post_application" {
   rest_api_id   = aws_api_gateway_rest_api.resume_screener_api.id
   resource_id   = aws_api_gateway_resource.applications_resource.id
   http_method   = "POST"
-  authorization_type = "NONE"
+  authorization = "NONE"
 }
 
 # CORS for /applications
@@ -219,7 +219,7 @@ resource "aws_api_gateway_method" "applications_options" {
   rest_api_id   = aws_api_gateway_rest_api.resume_screener_api.id
   resource_id   = aws_api_gateway_resource.applications_resource.id
   http_method   = "OPTIONS"
-  authorization_type = "NONE"
+  authorization = "NONE"
 }
 
 resource "aws_api_gateway_integration" "applications_options_integration" {
@@ -295,7 +295,7 @@ resource "aws_api_gateway_method" "get_application" {
   rest_api_id   = aws_api_gateway_rest_api.resume_screener_api.id
   resource_id   = aws_api_gateway_resource.application_resource.id
   http_method   = "GET"
-  authorization_type = "NONE"
+  authorization = "NONE"
   
   request_parameters = {
     "method.request.path.applicationId" = true
@@ -307,7 +307,7 @@ resource "aws_api_gateway_method" "application_options" {
   rest_api_id   = aws_api_gateway_rest_api.resume_screener_api.id
   resource_id   = aws_api_gateway_resource.application_resource.id
   http_method   = "OPTIONS"
-  authorization_type = "NONE"
+  authorization = "NONE"
 }
 
 resource "aws_api_gateway_integration" "application_options_integration" {

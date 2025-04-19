@@ -62,3 +62,5 @@ output "step_functions_state_machine_arn" {
   description = "ARN of the Step Functions state machine"
   value       = aws_sfn_state_machine.resume_screening_workflow.arn
 }
+
+# Note: API Gateway outputs are already defined in api_gateway.tf

@@ -11,13 +11,16 @@ if [ ! -f "$TERRAFORM_OUTPUT_FILE" ]; then
   terraform output -json > "$TERRAFORM_OUTPUT_FILE"
 fi
 
-# Extract DynamoDB table name from Terraform output
-JOB_TABLE_NAME=$(cat "$TERRAFORM_OUTPUT_FILE" | jq -r '.dynamodb_table_name.value')
+# Extract DynamoDB table names from Terraform output
+CANDIDATE_TABLE_NAME=$(cat "$TERRAFORM_OUTPUT_FILE" | jq -r '.dynamodb_table_name.value')
+JOB_TABLE_NAME="Jobs"  # The name from api_gateway.tf
 
-if [ -z "$JOB_TABLE_NAME" ] || [ "$JOB_TABLE_NAME" == "null" ]; then
-  # Use the default value from variables.tf
-  JOB_TABLE_NAME="Jobs"
-  echo "Warning: Job table name not found in Terraform output, using default: $JOB_TABLE_NAME"
+# Verify job table exists
+JOB_TABLE_EXISTS=$(aws dynamodb describe-table --table-name "$JOB_TABLE_NAME" 2>/dev/null || echo "not_found")
+
+if [ "$JOB_TABLE_EXISTS" = "not_found" ]; then
+  echo "Warning: Job table '$JOB_TABLE_NAME' not found. Make sure Terraform has been applied successfully."
+  echo "Continuing anyway..."
 fi
 
 echo "Creating sample job data in DynamoDB table: $JOB_TABLE_NAME"

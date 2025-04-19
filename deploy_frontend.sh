@@ -26,6 +26,13 @@ if [ -z "$CLOUDFRONT_DISTRIBUTION_ID" ] || [ "$CLOUDFRONT_DISTRIBUTION_ID" == "n
   exit 1
 fi
 
+if [ -z "$API_URL" ] || [ "$API_URL" == "null" ]; then
+  echo "Error: API Gateway URL not found in Terraform output"
+  exit 1
+fi
+
+echo "API Gateway URL: $API_URL"
+
 # Set API URL in environment file
 echo "Creating .env.production file with API URL: $API_URL"
 cat > frontend/.env.production << EOL

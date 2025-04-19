@@ -243,9 +243,7 @@ resource "aws_iam_policy" "lambda_custom_policy" {
         Action = [
           "states:StartExecution"
         ]
-        Resource = [
-          aws_sfn_state_machine.resume_screening_workflow.arn
-        ]
+        Resource = "*"  # Use wildcard to avoid circular dependency
       }
     ]
   })

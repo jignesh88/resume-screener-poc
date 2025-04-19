@@ -117,6 +117,27 @@ npm run dev
 python -m lambda.extract_text.extract_text
 ```
 
+## API Integration
+
+The frontend application integrates with the backend API via API Gateway. The integration works as follows:
+
+1. **API Gateway**: The API Gateway defined in `api_gateway.tf` creates endpoints for:
+   - `/jobs` - GET all jobs (with optional category filter)
+   - `/jobs/{jobId}` - GET specific job
+   - `/applications` - POST new application
+   - `/applications/{applicationId}` - GET application status
+
+2. **Lambda Functions**: The API Gateway routes requests to two Lambda functions:
+   - `jobs.py` - Handles job-related endpoints
+   - `applications.py` - Handles application-related endpoints
+
+3. **Frontend Integration**: The frontend's API client (`frontend/src/services/api.ts`) uses Axios to communicate with these endpoints.
+
+4. **Environment Configuration**: The deploy script sets the API Gateway URL in the frontend's environment variables:
+   ```
+   NEXT_PUBLIC_API_URL=https://[api-id].execute-api.[region].amazonaws.com/prod
+   ```
+
 ## License
 
 MIT

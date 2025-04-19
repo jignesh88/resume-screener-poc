@@ -68,3 +68,6 @@ venv.bak/
 .vscode/
 *.swp
 *.swo
+
+.next/
+node_modules/
