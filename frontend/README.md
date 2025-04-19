@@ -1,123 +1,138 @@
 # Resume Screener Frontend
 
-This is a React application for the job application portal that allows candidates to:
+A Next.js application for the job application portal that allows candidates to browse job listings, view job details, submit applications with resume uploads, and check application status.
 
-1. Browse available job listings
-2. View job details
-3. Submit applications with resume uploads
-4. Check application status
+## Features
 
-## Setup and Installation
+### Job Listings
+- Browse all available job positions
+- Filter jobs by category (Engineering, Data Science, etc.)
+- View job details including requirements and responsibilities
 
-### Prerequisites
+### Job Application
+- User-friendly application form
+- Resume upload with drag-and-drop functionality
+- Support for PDF, DOC, and DOCX formats
+- Application tracking and status checking
 
-- Node.js 16+ installed
-- npm or yarn package manager
+## Technology Stack
 
-### Installation
-
-```bash
-# Install dependencies
-npm install
-
-# Start development server
-npm start
-
-# Build for production
-npm run build
-```
-
-## Configuration
-
-The application uses environment variables for configuration. Create a `.env` file in the root directory with the following variables:
-
-```
-REACT_APP_API_URL=<API_Gateway_URL>
-REACT_APP_REGION=ap-southeast-2
-```
-
-For production, make sure to set these environment variables in your hosting environment.
+- **Framework**: Next.js 13 with TypeScript
+- **UI Components**: Material UI (MUI)
+- **Styling**: Tailwind CSS with MUI integration
+- **Form Handling**: React Hook Form
+- **File Upload**: React Dropzone
+- **HTTP Client**: Axios
+- **Build Output**: Static export for S3 hosting
 
 ## Project Structure
 
 ```
 /frontend
-├── public/                 # Static files
+├── public/                # Static assets
 ├── src/
-│   ├── components/         # React components
-│   ├── pages/              # Page components
-│   ├── hooks/              # Custom React hooks
-│   ├── utils/              # Utility functions
-│   ├── services/           # API service functions
-│   ├── context/            # React context providers
-│   ├── styles/             # CSS/SCSS styles
-│   ├── App.js              # Main app component
-│   └── index.js            # Entry point
-├── package.json            # Project dependencies and scripts
-└── README.md               # Project documentation
+│   ├── components/        # Reusable React components
+│   │   ├── ApplicationForm.tsx   # Job application form with file upload
+│   │   ├── JobCard.tsx           # Job listing card component
+│   │   ├── JobDetails.tsx        # Detailed job information display
+│   │   ├── JobFilter.tsx         # Job category filtering
+│   │   └── Layout.tsx            # Application layout with header/footer
+│   ├── pages/            # Next.js pages
+│   │   ├── _app.tsx             # Application wrapper with theme
+│   │   ├── _document.tsx        # HTML document customization
+│   │   ├── index.tsx            # Home page with job listings
+│   │   ├── jobs/[id].tsx        # Dynamic job details page
+│   │   └── application-status/[id].tsx  # Application status page
+│   ├── services/         # API service functions
+│   │   └── api.ts               # Backend API integration
+│   ├── styles/           # Global styles
+│   │   └── globals.css          # Tailwind imports and global CSS
+│   └── types/            # TypeScript type definitions
+│       └── index.ts             # Shared type definitions
+├── next.config.js        # Next.js configuration
+├── package.json          # Project dependencies
+├── tailwind.config.js    # Tailwind CSS configuration
+└── tsconfig.json         # TypeScript configuration
 ```
 
-## Features
+## Getting Started
 
-### Job Listings
+### Prerequisites
 
-The home page displays all available job listings from DynamoDB. Users can:
+- Node.js 16.x or higher
+- npm or yarn package manager
 
-- View all job listings
-- Filter by job category or title
-- Sort by posting date or other criteria
+### Development
 
-### Job Details
+1. Install dependencies:
+   ```bash
+   npm install
+   # or
+   yarn install
+   ```
 
-Users can view detailed information about each job:
+2. Create a `.env.local` file with the API endpoint:
+   ```
+   NEXT_PUBLIC_API_URL=https://your-api-gateway-url.execute-api.ap-southeast-2.amazonaws.com/prod
+   ```
 
-- Full job description
-- Requirements and qualifications
-- Company information
-- Application deadline
+3. Start the development server:
+   ```bash
+   npm run dev
+   # or
+   yarn dev
+   ```
 
-### Application Submission
+4. Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-The application process includes:
+### Building for Production
 
-- Application form with personal information
-- Resume upload to S3
-- Additional questions specific to the job
+```bash
+# Build and export static files
+npm run build
 
-### Application Status
-
-Users can check the status of their submitted applications:
-
-- Application received
-- Resume screening in progress
-- Phone interview scheduled
-- Interview scheduled
-- Application result
+# The output will be in the 'out' directory
+```
 
 ## Deployment
 
-The frontend can be deployed to AWS Amplify, S3 with CloudFront, or any other static website hosting service.
+The application is designed to be deployed as a static site on AWS S3 with CloudFront distribution. Deployment is handled by the `deploy_frontend.sh` script in the root of the repository, which:
 
-### AWS Amplify Deployment
+1. Builds the Next.js application with production environment variables
+2. Syncs the output files to the S3 bucket
+3. Invalidates the CloudFront cache
+
+To deploy manually:
 
 ```bash
-# Install AWS Amplify CLI
-npm install -g @aws-amplify/cli
-
-# Initialize Amplify
-amplify init
-
-# Add hosting
-amplify add hosting
-
-# Deploy
-amplify publish
+# From the repository root
+./deploy_frontend.sh
 ```
 
-### S3 and CloudFront Deployment
+## Testing
 
-Build the React app and upload the build folder to an S3 bucket configured for static website hosting. Then create a CloudFront distribution pointing to the S3 bucket.
+Component-level testing can be implemented using Jest and React Testing Library. To add tests, create a `__tests__` directory within the components or pages directories.
 
-## Connecting to Backend
+## Adding New Features
 
-The frontend connects to the backend API Gateway endpoint for all data operations. The API URL should be configured in the environment variables.
+### Adding a New Page
+
+Create a new file in the `src/pages` directory. Next.js will automatically create a route based on the file name.
+
+### Adding a New Component
+
+Create a new component in the `src/components` directory and import it where needed.
+
+### Adding New API Endpoints
+
+Update the `src/services/api.ts` file with new functions for any additional API endpoints.
+
+## Contributing
+
+1. Create a new branch for your feature
+2. Make changes and test locally
+3. Submit a pull request with a detailed description of your changes
+
+## License
+
+MIT
