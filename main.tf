@@ -458,74 +458,6 @@ data "archive_file" "schedule_interview_lambda_package" {
 }
 
 #------------------------------------------------------------
-# Step Functions State Machine
-#------------------------------------------------------------
-resource "aws_sfn_state_machine" "resume_screening_workflow" {
-  name     = "ResumeScreeningWorkflow"
-  role_arn = aws_iam_role.step_functions_execution_role.arn
-  
-  definition = <<EOF
-{
-  "Comment": "Resume screening and interview workflow",
-  "StartAt": "ExtractText",
-  "States": {
-    "ExtractText": {
-      "Type": "Task",
-      "Resource": "${aws_lambda_function.extract_text_lambda.arn}",
-      "Next": "ScreenResume"
-    },
-    "ScreenResume": {
-      "Type": "Task",
-      "Resource": "${aws_lambda_function.screen_resume_lambda.arn}",
-      "Next": "RankCandidates"
-    },
-    "RankCandidates": {
-      "Type": "Task",
-      "Resource": "${aws_lambda_function.rank_candidates_lambda.arn}",
-      "Next": "CheckTopCandidates"
-    },
-    "CheckTopCandidates": {
-      "Type": "Choice",
-      "Choices": [
-        {
-          "Variable": "$.isTopCandidate",
-          "BooleanEquals": true,
-          "Next": "PhoneInterview"
-        }
-      ],
-      "Default": "End"
-    },
-    "PhoneInterview": {
-      "Type": "Task",
-      "Resource": "${aws_lambda_function.phone_interview_lambda.arn}",
-      "Next": "CheckInterviewSuccess"
-    },
-    "CheckInterviewSuccess": {
-      "Type": "Choice",
-      "Choices": [
-        {
-          "Variable": "$.passedPhoneInterview",
-          "BooleanEquals": true,
-          "Next": "ScheduleInterview"
-        }
-      ],
-      "Default": "End"
-    },
-    "ScheduleInterview": {
-      "Type": "Task",
-      "Resource": "${aws_lambda_function.schedule_interview_lambda.arn}",
-      "End": true
-    },
-    "End": {
-      "Type": "Pass",
-      "End": true
-    }
-  }
-}
-EOF
-}
-
-#------------------------------------------------------------
 # CloudWatch Log Groups
 #------------------------------------------------------------
 resource "aws_cloudwatch_log_group" "extract_text_logs" {
@@ -550,11 +482,6 @@ resource "aws_cloudwatch_log_group" "phone_interview_logs" {
 
 resource "aws_cloudwatch_log_group" "schedule_interview_logs" {
   name              = "/aws/lambda/${aws_lambda_function.schedule_interview_lambda.function_name}"
-  retention_in_days = 30
-}
-
-resource "aws_cloudwatch_log_group" "step_functions_logs" {
-  name              = "/aws/states/${aws_sfn_state_machine.resume_screening_workflow.name}"
   retention_in_days = 30
 }
 
