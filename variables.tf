@@ -76,3 +76,22 @@ variable "company_phone" {
   description = "Phone number of the company"
   type        = string
 }
+
+# Frontend variables
+variable "frontend_bucket_name" {
+  description = "Name of the S3 bucket for hosting the frontend"
+  type        = string
+  default     = "resume-screener-frontend"
+}
+
+variable "frontend_domain_name" {
+  description = "Domain name for the frontend (if using custom domain)"
+  type        = string
+  default     = ""
+}
+
+variable "api_subdomain" {
+  description = "Subdomain for the API Gateway (if using custom domain)"
+  type        = string
+  default     = "api"
+}
